@@ -8,12 +8,6 @@ const next = document.querySelector('.offer__slider-next')
 
 
 
-
-
-
-
-
-
 const tabs = document.querySelectorAll('.tabcontent')
 const tabs_btn = document.querySelectorAll('.tabheader__item')
 
@@ -37,11 +31,7 @@ tabs_btn.forEach((btn, idx) => {
 
 
 
-
-
-
-
-let deadline = "2024-06-13 13:26:30"
+let deadline = "2024-06-16 00:00"
 
 function getRemainingTime(endTime) {
     const t = Date.parse(endTime) - Date.now(),
@@ -57,29 +47,6 @@ function getRemainingTime(endTime) {
         minutes,
         seconds
     }
-
-
-    (function frame() {
-        // launch a few confetti from the left edge
-        confetti({
-          particleCount: 15,
-          angle: 60,
-          spread: 100,
-          origin: { x: 0 }
-        });
-        // and launch a few from the right edge
-        confetti({
-          particleCount: 15,
-          angle: 120,
-          spread: 100,
-          origin: { x: 1 }
-        });
-      
-        // keep going until we are out of time
-        if (Date.now() < end) {
-          requestAnimationFrame(frame);
-        }
-      }());
 
 
       
@@ -102,17 +69,95 @@ function setTimer(endTime ,selector) {
         hours.innerHTML = t.hours
         minutes.innerHTML = t.minutes
         seconds.innerHTML = t.seconds
-        if(days === 0 && hours === 0 && minutes === 0 && seconds === 0){
-            var duration = 3 * 1000;
-    var end = Date.now() + duration;
-    
 
-    
-        }
+
+
     }
-
 
 }
 
-
 setTimer(deadline, '.timer')
+
+
+
+
+
+const  gender_btns = document.querySelectorAll('#gender .calculating__choose-item')
+const  acts = document.querySelectorAll('.calculating__choose_big .calculating__choose-item')
+const inputs = document.querySelectorAll('.calculating__choose_medium input')
+const res_view = document.querySelector('#res_view')
+
+
+const user_data = {
+    gender: '',
+}  
+
+
+gender_btns.forEach(btn => {
+    btn.onclick = () => {
+        user_data.gender = btn.getAttribute('data-gender')
+        gender_btns.forEach(el => el.classList.remove('calculating__choose-item_active'))
+        btn.classList.add('calculating__choose-item_active')
+    }
+})
+
+
+inputs.forEach(inp => {
+    inp.onkeyup = () => {
+        user_data[inp.id] = inp.value
+        console.log(user_data);
+        // console.log(inp.value, inp.id);
+    }
+})
+
+// Для женщин: 655,1 + (9,563 × вес в кг) + (1,85 × рост в см) - (4,676 × возраст в годах);
+// Для мужчин: 66,5 + (13,75 × вес в кг) + (5,003 × рост в см) - (6,775 × возраст в годах).
+
+
+
+acts.forEach(btn => {
+    btn.onclick = () => {
+        acts.forEach(elem => elem.classList.remove('calculating__choose-item_active'))
+        btn.classList.add('calculating__choose-item_active')
+        const act = +btn.getAttribute('data-active')
+
+        let result = 0
+
+        if(user_data.gender === 'women') {
+            result = 655.1 + (9.563 * user_data.weight) + (1.85 * user_data.height) - (4.676 * user_data.age)
+        } else {
+            result = 66.5 + (13.75 * user_data.weight) + (5.003 * user_data.height) - (6.775 * user_data.age)
+        }
+        
+        res_view.innerHTML = Math.round(result * act)
+    }
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// const active_data = {
+//     active: 'low',
+//     active: 'small',
+//     active: 'medium',
+//     active: 'high',
+// }
+
+// gender_btns.forEach(act => {
+//     act.onclick = () => {
+//         active_data.active = act.getAttribute('data-active')
+//         gender_btns.forEach(elem => elem.classList.remove('calculating__choose-item_active'))
+//         act.classList.add('calculating__choose-item_active')
+//     }
+// })
